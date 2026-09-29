@@ -43,12 +43,11 @@
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: var(--radius);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
       overflow: hidden;
       margin-top: 5px;
     }
 
-    /* Header */
     header {
       background-color: var(--card-bg);
       text-align: center;
@@ -69,7 +68,6 @@
       margin-top: 4px;
     }
 
-    /* Navigation Tabs */
     nav.tab-nav {
       display: flex;
       background-color: var(--accent-bg);
@@ -103,7 +101,6 @@
       background-color: var(--card-bg);
     }
 
-    /* Pages */
     .page {
       display: none;
       padding: 20px 15px;
@@ -128,7 +125,6 @@
       margin-bottom: 20px;
     }
 
-    /* Form Elements */
     .input-row {
       display: flex;
       gap: 8px;
@@ -189,7 +185,6 @@
       font-weight: 600;
     }
 
-    /* Buttons */
     .btn {
       width: 100%;
       padding: 12px;
@@ -231,7 +226,6 @@
       margin-top: 20px;
     }
 
-    /* Page 1 Options */
     .menu-grid {
       display: flex;
       flex-direction: column;
@@ -268,7 +262,6 @@
       background-color: var(--primary-hover);
     }
 
-    /* Compact Mobile Table Page 5 */
     .table-container {
       width: 100%;
       overflow-x: auto;
@@ -309,7 +302,6 @@
       white-space: nowrap;
     }
 
-    /* Summary Footer Page 5 */
     .summary-box {
       margin-top: 20px;
       background-color: var(--accent-bg);
@@ -324,7 +316,6 @@
       align-items: center;
       padding: 6px 0;
       font-size: 0.85rem;
-      border-bottom: 1px border-subtle;
     }
 
     .summary-row:not(:last-child) {
@@ -338,7 +329,6 @@
       padding-top: 8px;
     }
 
-    /* Popup Modal */
     .popup-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -375,14 +365,11 @@
 <body>
 
   <div class="main-wrapper">
-    
-    <!-- HEADER -->
     <header>
       <h1>TrinkoGeldo26</h1>
       <p class="slogan">Einfach & Schnell Trinkgeld Berechnen</p>
     </header>
 
-    <!-- NAVIGATION TABS -->
     <nav class="tab-nav">
       <button onclick="showPage('page1')" id="tab-page1" class="active">Start</button>
       <button onclick="showPage('page2a')" id="tab-page2a">Voll/Teilzeit</button>
@@ -392,10 +379,8 @@
       <button onclick="showPage('page5')" id="tab-page5">Ergebnis</button>
     </nav>
 
-    <!-- SEITE 1: HAUPTMENÜ -->
     <div id="page1" class="page active">
       <p class="page-desc">Bitte wähle eine Option aus:</p>
-
       <div class="menu-grid">
         <div class="menu-card" onclick="showPage('page2a')">
           1. VOLLZEITKRÄFTE UND TEILZEITKRÄFTE
@@ -409,45 +394,34 @@
       </div>
     </div>
 
-    <!-- SEITE 2a: VOLLZEIT UND TEILZEIT -->
     <div id="page2a" class="page">
       <h2 class="page-title">Vollzeitkräfte und Teilzeitkräfte</h2>
       <p class="page-desc">Gebe die Namen ein und die prozentualen Anteile pro Stunde.</p>
-
       <div id="container-2a"></div>
-
       <button class="btn btn-secondary" onclick="addRow2a()">+ Weitere Person hinzufügen</button>
-
       <div class="btn-center-container">
         <button class="btn" onclick="savePage2a()">Speichern</button>
       </div>
     </div>
 
-    <!-- SEITE 2b: AUSHILFEN UND KÜCHE -->
     <div id="page2b" class="page">
       <h2 class="page-title">AUSHILFEN UND KÜCHE</h2>
       <p class="page-desc">Gebe die Namen ein und die Pauschalsummen in Euro. KÜCHE in Prozent.</p>
-
       <div id="container-2b"></div>
-
       <button class="btn btn-secondary" onclick="addRow2b()">+ Weitere Person hinzufügen</button>
-
       <div class="kueche-block">
         <label for="kueche-percent">KÜCHE:</label>
         <div>
           <input type="number" id="kueche-percent" placeholder="0" style="width: 70px; padding: 6px; text-align: right;" min="0" step="any"> %
         </div>
       </div>
-
       <div class="btn-center-container">
         <button class="btn" onclick="savePage2b()">Speichern</button>
       </div>
     </div>
 
-    <!-- SEITE 3: TRINKGELDBERECHNUNG -->
     <div id="page3" class="page">
       <h2 class="page-title">TRINKGELDBERECHNUNG</h2>
-
       <div style="margin-top: 15px;">
         <div class="inline-field">
           <label for="wochen-trinkgeld">Höhe des Wochentrinkgeldes:</label>
@@ -467,34 +441,25 @@
       </div>
     </div>
 
-    <!-- SEITE 4: GELEISTETE WOCHENSTUNDEN -->
     <div id="page4" class="page">
       <h2 class="page-title">GELEISTETE WOCHENSTUNDEN</h2>
       <p class="page-desc">Bitte geben sie die Wochenstunden ein.</p>
-
       <div id="container-page4"></div>
-
       <div class="btn-center-container">
         <button class="btn" onclick="savePage4AndCalculate()">Speichern und weiter</button>
       </div>
     </div>
 
-    <!-- SEITE 5: BERECHNUNG / ERGEBNIS -->
     <div id="page5" class="page">
       <h2 class="page-title">BERECHNUNG</h2>
-
       <div class="table-container" id="results-container"></div>
-
       <div class="summary-box" id="summary-container"></div>
-
       <div class="btn-center-container">
         <button class="btn" onclick="showPage('page1')">Zurück zur Startseite</button>
       </div>
     </div>
-
   </div>
 
-  <!-- POPUP NOTIFICATION -->
   <div class="popup-overlay" id="popup-modal">
     <div class="popup-card">
       <h3>Gespeichert</h3>
@@ -502,7 +467,6 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT APP LOGIC -->
   <script>
     let ftPtList = [];         
     let aushilfeList = [];     
@@ -622,12 +586,10 @@
       showPage('page4');
     }
 
-    // PAGE 4 RENDERING (Aushilfen ausgeschlossen!)
     function renderPage4() {
       const container = document.getElementById('container-page4');
       container.innerHTML = '';
 
-      // 1. NUR Vollzeit & Teilzeitkräfte
       ftPtList.forEach(person => {
         const div = document.createElement('div');
         div.className = 'inline-field';
@@ -640,7 +602,6 @@
         container.appendChild(div);
       });
 
-      // 2. KÜCHE (Anzeige ohne Eingabefeld)
       const divKueche = document.createElement('div');
       divKueche.className = 'kueche-block';
       divKueche.innerHTML = `
@@ -661,20 +622,32 @@
       showPage('page5');
     }
 
-    // PAGE 5 BERECHNUNG UND BEREINIGTE RUNDUNG
     function calculateAndRenderResults() {
       const tableContainer = document.getElementById('results-container');
       const summaryContainer = document.getElementById('summary-container');
       
-      // 1. Küche: Berechnung & auf VOLLE EURO gerundet
+      // 1. Küche (auf volle Euro gerundet)
       const kuecheRaw = (kuechePercent / 100) * wochenTrinkgeld;
       const kuecheTipRounded = Math.round(kuecheRaw);
 
-      // Aushilfen Summe
+      // 2. Aushilfen (Pauschal)
       let aushilfeTotal = 0;
       aushilfeList.forEach(a => aushilfeTotal += a.pauschal);
 
-      // Tabelle aufbauen
+      // 3. Neuer Topf (100% des Rests für Vollzeit / Teilzeit)
+      const restPool = wochenTrinkgeld - kuecheTipRounded - aushilfeTotal;
+
+      // 4. Summe der gewichteten Stunden (Stunden * Prozentfaktor)
+      let totalWeightedHours = 0;
+      ftPtList.forEach(person => {
+        const pStunden = workerHours[person.name] || 0;
+        totalWeightedHours += pStunden * (person.percent / 100);
+      });
+
+      // 5. Neuer Betrag pro gewichteter Stunde
+      const hourlyRate = totalWeightedHours > 0 ? (restPool / totalWeightedHours) : 0;
+
+      // Tabelle generieren
       let html = `
         <table class="result-table">
           <thead>
@@ -685,34 +658,20 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td><strong>KÜCHE</strong></td>
+              <td>${kuechePercent}% (gerundet)</td>
+              <td class="amount">${kuecheTipRounded.toFixed(2)} €</td>
+            </tr>
+            <tr class="category-header"><td colspan="3">Vollzeit- & Teilzeitkräfte</td></tr>
       `;
 
-      // Zeile Küche
-      html += `
-        <tr>
-          <td><strong>KÜCHE</strong></td>
-          <td>${kuechePercent}% (gerundet)</td>
-          <td class="amount">${kuecheTipRounded.toFixed(2)} €</td>
-        </tr>
-      `;
-
-      // 2. Vollzeit & Teilzeitkräfte
-      html += `<tr class="category-header"><td colspan="3">Vollzeit- & Teilzeitkräfte</td></tr>`;
-      
-      const restPool = wochenTrinkgeld - kuecheTipRounded - aushilfeTotal;
       let ftPtSumRounded = 0;
 
       ftPtList.forEach(person => {
         const pStunden = workerHours[person.name] || 0;
-        let rawTip = 0;
-
-        if (gesamtStunden > 0) {
-          rawTip = (((restPool) / gesamtStunden) * pStunden) * (person.percent / 100);
-        }
-
-        if (rawTip < 0) rawTip = 0;
-
-        // Gerundetes Trinkgeld (Standard-Rundung auf 2 Dezimalstellen)
+        const weightedHours = pStunden * (person.percent / 100);
+        const rawTip = weightedHours * hourlyRate;
         const roundedTip = Math.round(rawTip * 100) / 100;
         ftPtSumRounded += roundedTip;
 
@@ -725,7 +684,6 @@
         `;
       });
 
-      // 3. Aushilfen
       html += `<tr class="category-header"><td colspan="3">Aushilfen</td></tr>`;
 
       aushilfeList.forEach(person => {
@@ -745,8 +703,7 @@
 
       tableContainer.innerHTML = html;
 
-      // 4. ZUSAMMENFASSUNG GANZ UNTEN
-      const tipProStunde = gesamtStunden > 0 ? ((wochenTrinkgeld - kuecheTipRounded) / gesamtStunden) : 0;
+      // Anzeige der Gesamtsummen am Seitenende
       const ergebnisGesamtsumme = kuecheTipRounded + ftPtSumRounded + aushilfeTotal;
 
       summaryContainer.innerHTML = `
@@ -755,8 +712,8 @@
           <strong>${wochenTrinkgeld.toFixed(2)} €</strong>
         </div>
         <div class="summary-row">
-          <span>Trinkgeld pro Stunde:</span>
-          <strong>${tipProStunde.toFixed(2)} €</strong>
+          <span>Trinkgeld pro gewichteter Std.:</span>
+          <strong>${hourlyRate.toFixed(2)} €</strong>
         </div>
         <div class="summary-row total-highlight">
           <span>Ergebnis Trinkgeldübersicht:</span>
