@@ -1,1 +1,831 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrinkoGeldo26 - 50s Diner Tip Calculator</title>
+  
+  <!-- Google Fonts: Retro Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Righteous&family=Roboto:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* --------------------------------------------------
+       50s / 60s DINER STYLING
+    -------------------------------------------------- */
+    :root {
+      --diner-red: #d9383a;
+      --diner-red-hover: #b82b2d;
+      --diner-teal: #2cb69d;
+      --diner-teal-hover: #22927d;
+      --diner-cream: #fbf6eb;
+      --diner-yellow: #f1c40f;
+      --diner-dark: #2c3e50;
+      --diner-border: #1a252f;
+      --diner-disabled: #e74c3c;
+      --diner-active-green: #27ae60;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Righteous', 'Roboto', sans-serif;
+      background-color: var(--diner-cream);
+      color: var(--diner-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /* Checkerboard Top & Bottom Border Style */
+      background-image: 
+        linear-gradient(45deg, #111 25%, transparent 25%), 
+        linear-gradient(-45deg, #111 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #111 75%),
+        linear-gradient(-45deg, transparent 75%, #111 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      padding-bottom: 40px;
+    }
+
+    .main-wrapper {
+      width: 100%;
+      max-width: 850px;
+      background-color: #ffffff;
+      border: 4px solid var(--diner-dark);
+      border-radius: 20px;
+      margin-top: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    /* Header & Branding */
+    header {
+      background-color: var(--diner-red);
+      color: #fff;
+      text-align: center;
+      padding: 25px 15px 15px 15px;
+      border-bottom: 4px solid var(--diner-dark);
+      position: relative;
+    }
+
+    header h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 2.8rem;
+      text-shadow: 3px 3px 0px var(--diner-dark);
+      letter-spacing: 1px;
+      color: var(--diner-yellow);
+    }
+
+    header p.slogan {
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-top: 5px;
+      color: #ffffff;
+      text-shadow: 1px 1px 0px #000;
+    }
+
+    /* Top Navigation Tabs (Reiter) */
+    nav.tab-nav {
+      display: flex;
+      flex-wrap: wrap;
+      background-color: var(--diner-dark);
+      border-bottom: 3px solid var(--diner-dark);
+    }
+
+    nav.tab-nav button {
+      flex: 1;
+      min-width: 120px;
+      background-color: #34495e;
+      color: #fff;
+      border: none;
+      padding: 12px 8px;
+      font-family: 'Righteous', cursive;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      border-right: 1px solid #4a627a;
+    }
+
+    nav.tab-nav button:hover {
+      background-color: var(--diner-teal);
+      color: #fff;
+    }
+
+    nav.tab-nav button.active {
+      background-color: var(--diner-red);
+      color: var(--diner-yellow);
+      font-weight: bold;
+    }
+
+    /* Content Pages */
+    .page {
+      display: none;
+      padding: 30px 20px;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2.page-title {
+      font-family: 'Pacifico', cursive;
+      color: var(--diner-red);
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 0px var(--diner-dark);
+    }
+
+    p.page-desc {
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 25px;
+      color: #555;
+    }
+
+    /* Forms & Inputs */
+    .input-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 12px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .input-row input {
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-family: 'Righteous', sans-serif;
+      border: 2px solid var(--diner-dark);
+      border-radius: 8px;
+      outline: none;
+      background-color: #fafafa;
+    }
+
+    .input-row input:focus {
+      border-color: var(--diner-teal);
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(44, 182, 157, 0.5);
+    }
+
+    .input-row input[type="text"] {
+      flex: 2;
+      max-width: 250px;
+    }
+
+    .input-row input[type="number"] {
+      flex: 1;
+      max-width: 150px;
+    }
+
+    /* Form Section Dividers / Spacers */
+    .spacer {
+      height: 25px;
+    }
+
+    .kueche-block {
+      background-color: #f2f9f8;
+      border: 2px dashed var(--diner-teal);
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px auto;
+      max-width: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.2rem;
+    }
+
+    .inline-field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 15px 0;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .inline-field input {
+      padding: 10px;
+      font-size: 1rem;
+      font-family: 'Righteous', sans-serif;
+      border: 2px solid var(--diner-dark);
+      border-radius: 8px;
+      width: 140px;
+      text-align: right;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      font-family: 'Righteous', cursive;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      color: #fff;
+      background-color: var(--diner-teal);
+      border: 2px solid var(--diner-dark);
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 0px var(--diner-dark);
+      transition: all 0.1s ease;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background-color: var(--diner-teal-hover);
+    }
+
+    .btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0px var(--diner-dark);
+    }
+
+    .btn-red {
+      background-color: var(--diner-disabled);
+    }
+
+    .btn-red:hover {
+      background-color: #c0392b;
+    }
+
+    .btn-green {
+      background-color: var(--diner-active-green) !important;
+      cursor: pointer !important;
+    }
+
+    .btn-add {
+      background-color: var(--diner-yellow);
+      color: var(--diner-dark);
+      font-size: 0.95rem;
+      padding: 8px 16px;
+      margin: 10px auto;
+      display: block;
+    }
+
+    .btn-add:hover {
+      background-color: #f39c12;
+    }
+
+    .btn-center-container {
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    /* Page 1 - Menu Cards */
+    .menu-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 450px;
+      margin: 30px auto;
+    }
+
+    .menu-card {
+      background: #fff;
+      border: 3px solid var(--diner-dark);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 5px 0px var(--diner-dark);
+      transition: all 0.15s ease;
+      color: var(--diner-dark);
+    }
+
+    .menu-card:hover {
+      background-color: #fffde7;
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0px var(--diner-dark);
+    }
+
+    .menu-card.highlight {
+      background-color: var(--diner-teal);
+      color: #fff;
+    }
+
+    .menu-card.highlight:hover {
+      background-color: var(--diner-teal-hover);
+    }
+
+    /* Popup Modal */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .popup-card {
+      background: #fff;
+      border: 4px solid var(--diner-red);
+      border-radius: 15px;
+      padding: 30px 40px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: popIn 0.3s ease;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .popup-card h3 {
+      font-family: 'Pacifico', cursive;
+      color: var(--diner-red);
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    /* Table styling for Page 5 */
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      border: 2px solid var(--diner-dark);
+    }
+
+    .result-table th, .result-table td {
+      border: 1px solid var(--diner-dark);
+      padding: 12px;
+      text-align: left;
+      font-size: 1rem;
+    }
+
+    .result-table th {
+      background-color: var(--diner-red);
+      color: #fff;
+      font-family: 'Righteous', cursive;
+      letter-spacing: 1px;
+    }
+
+    .result-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .result-table tr.category-header td {
+      background-color: #eee;
+      font-weight: bold;
+      color: var(--diner-dark);
+    }
+
+    .result-table td.amount {
+      font-weight: bold;
+      color: var(--diner-teal-hover);
+      text-align: right;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      header h1 { font-size: 2.2rem; }
+      .input-row { flex-direction: column; gap: 8px; }
+      .input-row input[type="text"], .input-row input[type="number"] { max-width: 100%; width: 100%; }
+      .inline-field { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-wrapper">
+    
+    <!-- HEADER -->
+    <header>
+      <h1>TrinkoGeldo26</h1>
+      <p class="slogan">Rockin' & Rollin' Tip Distribution!</p>
+    </header>
+
+    <!-- NAVIGATION TABS (REITER) -->
+    <nav class="tab-nav">
+      <button onclick="showPage('page1')" id="tab-page1" class="active">Start</button>
+      <button onclick="showPage('page2a')" id="tab-page2a">Voll/Teilzeit</button>
+      <button onclick="showPage('page2b')" id="tab-page2b">Aushilfen/Küche</button>
+      <button onclick="showPage('page3')" id="tab-page3">Trinkgeldberechnung</button>
+      <button onclick="showPage('page4')" id="tab-page4">Wochenstunden</button>
+      <button onclick="showPage('page5')" id="tab-page5">Ergebnis</button>
+    </nav>
+
+    <!-- SEITE 1: HAUPTMENÜ -->
+    <div id="page1" class="page active">
+      <h2 class="page-title">Willkommen im Diner!</h2>
+      <p class="page-desc">Wähle eine Option aus, um Personal zu verwalten oder die Berechnungen zu starten.</p>
+
+      <div class="menu-grid">
+        <div class="menu-card" onclick="showPage('page2a')">
+          1. VOLLZEITKRÄFTE UND TEILZEITKRÄFTE
+        </div>
+        <div class="menu-card" onclick="showPage('page2b')">
+          2. AUSHILFEN UND KÜCHE
+        </div>
+        <div class="menu-card highlight" onclick="showPage('page3')">
+          Trinkgeldberechnung
+        </div>
+      </div>
+    </div>
+
+    <!-- SEITE 2a: VOLLZEIT UND TEILZEIT -->
+    <div id="page2a" class="page">
+      <h2 class="page-title">Vollzeitkräfte und Teilzeitkräfte</h2>
+      <p class="page-desc">Gebe die Namen ein und die prozentualen Anteile pro Stunde.</p>
+
+      <div id="container-2a">
+        <!-- Dyn. Input rows -->
+      </div>
+
+      <button class="btn btn-add" onclick="addRow2a()">+ weitere Person hinzufügen</button>
+
+      <div class="btn-center-container">
+        <button class="btn" onclick="savePage2a()">Speichern</button>
+      </div>
+    </div>
+
+    <!-- SEITE 2b: AUSHILFEN UND KÜCHE -->
+    <div id="page2b" class="page">
+      <h2 class="page-title">AUSHILFEN UND KÜCHE</h2>
+      <p class="page-desc">Gebe die Namen ein und die Pauschalsummen in Euro. KÜCHE in Prozent.</p>
+
+      <div id="container-2b">
+        <!-- Dyn. Input rows -->
+      </div>
+
+      <button class="btn btn-add" onclick="addRow2b()">+ weitere Person hinzufügen</button>
+
+      <div class="spacer"></div>
+
+      <div class="kueche-block">
+        <label for="kueche-percent"><strong>KÜCHE:</strong></label>
+        <div>
+          <input type="number" id="kueche-percent" placeholder="z.B. 10" style="width: 100px; padding: 8px; border: 2px solid var(--diner-dark); border-radius: 6px;" min="0" step="any"> %
+        </div>
+      </div>
+
+      <div class="btn-center-container">
+        <button class="btn" onclick="savePage2b()">Speichern</button>
+      </div>
+    </div>
+
+    <!-- SEITE 3: TRINKGELDBERECHNUNG (EINGABE GELESITETES GELD / STUNDEN) -->
+    <div id="page3" class="page">
+      <h2 class="page-title">TRINKGELDBERECHNUNG</h2>
+
+      <div style="max-width: 500px; margin: 30px auto 0 auto;">
+        <div class="inline-field">
+          <label for="wochen-trinkgeld" style="flex: 1; text-align: right;">Höhe des Wochentrinkgeldes:</label>
+          <input type="number" id="wochen-trinkgeld" oninput="validatePage3()" placeholder="0.00" step="any" min="0">
+          <span>Euro</span>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="inline-field">
+          <label for="gesamt-stunden" style="flex: 1; text-align: right;">Gesamt geleistete Stunden:</label>
+          <input type="number" id="gesamt-stunden" oninput="validatePage3()" placeholder="0" step="any" min="0">
+          <span>Stunden</span>
+        </div>
+
+        <div class="btn-center-container" style="margin-top: 40px;">
+          <button id="btn-page3-next" class="btn btn-red" disabled onclick="saveAndGoToPage4()">Weiter</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEITE 4: GELEISTETE WOCHENSTUNDEN -->
+    <div id="page4" class="page">
+      <h2 class="page-title">GELEISTETE WOCHENSTUNDEN</h2>
+      <p class="page-desc">Bitte geben sie die Wochenstunden ein.</p>
+
+      <div id="container-page4" style="max-width: 500px; margin: 0 auto;">
+        <!-- Dynamic list of employees -->
+      </div>
+
+      <div class="btn-center-container">
+        <button class="btn" onclick="savePage4AndCalculate()">Speichern und weiter</button>
+      </div>
+    </div>
+
+    <!-- SEITE 5: BERECHNUNG / ERGEBNIS -->
+    <div id="page5" class="page">
+      <h2 class="page-title">BERECHNUNG</h2>
+
+      <div id="results-container">
+        <!-- Table injected here -->
+      </div>
+
+      <div class="btn-center-container">
+        <button class="btn" onclick="showPage('page1')">Zurück zur Startseite</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- POPUP NOTIFICATION -->
+  <div class="popup-overlay" id="popup-modal">
+    <div class="popup-card">
+      <h3>Vielen Dank!</h3>
+      <p id="popup-message">Deine Daten wurden gespeichert.</p>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP LOGIC -->
+  <script>
+    // DATA STORE
+    let ftPtList = [];         // [{name: string, percent: number}]
+    let aushilfeList = [];     // [{name: string, pauschal: number}]
+    let kuechePercent = 0;     // number
+    let wochenTrinkgeld = 0;   // number
+    let gesamtStunden = 0;     // number
+    let workerHours = {};      // { [name]: number }
+
+    // INITIALIZATION
+    window.onload = function() {
+      // Init 3 default rows for 2a
+      for (let i = 0; i < 3; i++) {
+        addRow2a();
+      }
+      // Init 3 default rows for 2b
+      for (let i = 0; i < 3; i++) {
+        addRow2b();
+      }
+    };
+
+    // TAB NAVIGATION
+    function showPage(pageId) {
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(p => p.classList.remove('active'));
+
+      const tabs = document.querySelectorAll('nav.tab-nav button');
+      tabs.forEach(t => t.classList.remove('active'));
+
+      document.getElementById(pageId).classList.add('active');
+      const activeTab = document.getElementById('tab-' + pageId);
+      if (activeTab) activeTab.classList.add('active');
+
+      // Specific page setup triggers
+      if (pageId === 'page4') {
+        renderPage4();
+      } else if (pageId === 'page5') {
+        calculateAndRenderResults();
+      }
+    }
+
+    // DYNAMIC ROWS FOR PAGE 2a (Vollzeit & Teilzeit)
+    function addRow2a() {
+      const container = document.getElementById('container-2a');
+      const div = document.createElement('div');
+      div.className = 'input-row';
+      div.innerHTML = `
+        <input type="text" placeholder="Name" class="ftpt-name">
+        <input type="number" placeholder="Prozent %" class="ftpt-percent" step="any" min="0">
+      `;
+      container.appendChild(div);
+    }
+
+    function savePage2a() {
+      const nameInputs = document.querySelectorAll('.ftpt-name');
+      const percentInputs = document.querySelectorAll('.ftpt-percent');
+
+      ftPtList = [];
+      for (let i = 0; i < nameInputs.length; i++) {
+        const name = nameInputs[i].value.trim();
+        const percent = parseFloat(percentInputs[i].value) || 0;
+        if (name !== "") {
+          ftPtList.push({ name, percent });
+        }
+      }
+
+      showPopupAndReturn("Vielen dank, deine Daten wurden gespeichert.");
+    }
+
+    // DYNAMIC ROWS FOR PAGE 2b (Aushilfen & Küche)
+    function addRow2b() {
+      const container = document.getElementById('container-2b');
+      const div = document.createElement('div');
+      div.className = 'input-row';
+      div.innerHTML = `
+        <input type="text" placeholder="Name" class="aushilfe-name">
+        <input type="number" placeholder="Pauschal Euro €" class="aushilfe-euro" step="any" min="0">
+      `;
+      container.appendChild(div);
+    }
+
+    function savePage2b() {
+      const nameInputs = document.querySelectorAll('.aushilfe-name');
+      const euroInputs = document.querySelectorAll('.aushilfe-euro');
+
+      aushilfeList = [];
+      for (let i = 0; i < nameInputs.length; i++) {
+        const name = nameInputs[i].value.trim();
+        const pauschal = parseFloat(euroInputs[i].value) || 0;
+        if (name !== "") {
+          aushilfeList.push({ name, pauschal });
+        }
+      }
+
+      const kuecheInput = document.getElementById('kueche-percent');
+      kuechePercent = parseFloat(kuecheInput.value) || 0;
+
+      showPopupAndReturn("Vielen dank, deine Daten wurden gespeichert.");
+    }
+
+    // POPUP FUNCTIONALITY
+    function showPopupAndReturn(msg) {
+      const popup = document.getElementById('popup-modal');
+      const msgEl = document.getElementById('popup-message');
+      msgEl.innerText = msg;
+      popup.style.display = 'flex';
+
+      setTimeout(() => {
+        popup.style.display = 'none';
+        showPage('page1');
+      }, 3000);
+    }
+
+    // PAGE 3 VALIDATION & SAVING
+    function validatePage3() {
+      const tipVal = document.getElementById('wochen-trinkgeld').value;
+      const stundenVal = document.getElementById('gesamt-stunden').value;
+      const btn = document.getElementById('btn-page3-next');
+
+      if (tipVal !== "" && stundenVal !== "" && parseFloat(tipVal) >= 0 && parseFloat(stundenVal) > 0) {
+        btn.disabled = false;
+        btn.classList.remove('btn-red');
+        btn.classList.add('btn-green');
+      } else {
+        btn.disabled = true;
+        btn.classList.remove('btn-green');
+        btn.classList.add('btn-red');
+      }
+    }
+
+    function saveAndGoToPage4() {
+      wochenTrinkgeld = parseFloat(document.getElementById('wochen-trinkgeld').value) || 0;
+      gesamtStunden = parseFloat(document.getElementById('gesamt-stunden').value) || 0;
+
+      showPage('page4');
+    }
+
+    // PAGE 4 RENDERING
+    function renderPage4() {
+      const container = document.getElementById('container-page4');
+      container.innerHTML = '';
+
+      // 1. Vollzeit & Teilzeitkräfte
+      ftPtList.forEach(person => {
+        const div = document.createElement('div');
+        div.className = 'inline-field';
+        const currentVal = workerHours[person.name] !== undefined ? workerHours[person.name] : 0;
+        div.innerHTML = `
+          <label style="flex:1; text-align:right;">${person.name}:</label>
+          <input type="number" class="hours-input" data-name="${person.name}" value="${currentVal}" step="any" min="0">
+          <span>Stunde</span>
+        `;
+        container.appendChild(div);
+      });
+
+      // 2. Aushilfen
+      aushilfeList.forEach(person => {
+        const div = document.createElement('div');
+        div.className = 'inline-field';
+        const currentVal = workerHours[person.name] !== undefined ? workerHours[person.name] : 0;
+        div.innerHTML = `
+          <label style="flex:1; text-align:right;">${person.name}:</label>
+          <input type="number" class="hours-input" data-name="${person.name}" value="${currentVal}" step="any" min="0">
+          <span>Stunde</span>
+        `;
+        container.appendChild(div);
+      });
+
+      // 3. KÜCHE (Without input field)
+      if (kuechePercent > 0 || true) {
+        const divKueche = document.createElement('div');
+        divKueche.className = 'kueche-block';
+        divKueche.style.margin = '15px auto';
+        divKueche.innerHTML = `
+          <span><strong>KÜCHE</strong></span>
+          <span style="font-size: 0.95rem; color: #666;">(Prozentual berücksichtigt)</span>
+        `;
+        container.appendChild(divKueche);
+      }
+    }
+
+    function savePage4AndCalculate() {
+      const inputs = document.querySelectorAll('.hours-input');
+      inputs.forEach(input => {
+        const name = input.getAttribute('data-name');
+        const val = parseFloat(input.value) || 0;
+        workerHours[name] = val;
+      });
+
+      showPage('page5');
+    }
+
+    // PAGE 5 CALCULATION & TABLE GENERATION
+    function calculateAndRenderResults() {
+      const container = document.getElementById('results-container');
+      
+      // Calculate Kitchen Tip
+      const kuecheTipSum = (kuechePercent / 100) * wochenTrinkgeld;
+
+      // Calculate Total Aushilfen Tip Sum
+      let totalAushilfePauschal = 0;
+      aushilfeList.forEach(a => {
+        totalAushilfePauschal += a.pauschal;
+      });
+
+      // Build Table HTML
+      let html = `
+        <table class="result-table">
+          <thead>
+            <tr>
+              <th>Name / Gruppe</th>
+              <th>Prozent / Details</th>
+              <th>Stunden</th>
+              <th style="text-align:right;">Trinkgeld Euro</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      // 1. KÜCHE ROW
+      html += `
+        <tr style="background-color: #fff8e7;">
+          <td><strong>KÜCHE</strong></td>
+          <td>${kuechePercent}% vom Gesamttrinkgeld</td>
+          <td>-</td>
+          <td class="amount">${kuecheTipSum.toFixed(2)} €</td>
+        </tr>
+      `;
+
+      // 2. VOLLZEIT & TEILZEITKRÄFTE
+      // Formula: (((Gesamttrinkgeld - küche - Aushilfen) / gesamtstunden) * geleistete stunden) * prozente
+      html += `<tr class="category-header"><td colspan="4">Vollzeitkräfte & Teilzeitkräfte</td></tr>`;
+      
+      const restPool = wochenTrinkgeld - kuecheTipSum - totalAushilfePauschal;
+
+      ftPtList.forEach(person => {
+        const pStunden = workerHours[person.name] || 0;
+        let tipAmount = 0;
+
+        if (gesamtStunden > 0) {
+          tipAmount = (((restPool) / gesamtStunden) * pStunden) * (person.percent / 100);
+        }
+
+        if (tipAmount < 0) tipAmount = 0; // Safeguard if pool is negative
+
+        html += `
+          <tr>
+            <td>${person.name}</td>
+            <td>${person.percent}%</td>
+            <td>${pStunden} Std.</td>
+            <td class="amount">${tipAmount.toFixed(2)} €</td>
+          </tr>
+        `;
+      });
+
+      // 3. AUSHILFEN
+      html += `<tr class="category-header"><td colspan="4">Aushilfen</td></tr>`;
+
+      aushilfeList.forEach(person => {
+        const pStunden = workerHours[person.name] || 0;
+        html += `
+          <tr>
+            <td>${person.name}</td>
+            <td>Pauschalsumme</td>
+            <td>${pStunden} Std.</td>
+            <td class="amount">${person.pauschal.toFixed(2)} €</td>
+          </tr>
+        `;
+      });
+
+      html += `
+          </tbody>
+        </table>
+      `;
+
+      container.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
 
